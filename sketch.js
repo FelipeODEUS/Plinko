@@ -9,7 +9,8 @@ var ball;
 
 var divisionHeight=300;
 var score =0;
-var estadoJogo = jogar;
+var estadoJogo = "jogar";
+var count = 0;
 
 function setup() {
   createCanvas(800, 800);
@@ -58,43 +59,36 @@ function draw() {
   Engine.update(engine);
   ground.display();
 
-if(ball.x < 300){
-  score = score + 500;
-}
-
-if(ball.x > 301 && ball.x < 600){
-  score = score + 100;
-}
-
-if(ball.x > 601 && ball.x < 900){
-  score = score + 200;
-}
-
   for (var i = 0; i < plinkos.length; i++) {
-     plinkos[i].display();  
+    plinkos[i].display();  
+ }
+
+ if(estadoJogo == "end"){
+  textSize(100);
+  text(" GameOver",150, 250);
+}
+
+if(ball!=null)
+{
+   ball.display();
+
+  if(ball.body.position.y > 760){
+    if(ball.body.position.x < 300){
+      score = score + 500;
+      ball = null;
+      if(count >= 5 ) estadoJogo = "end";
+    }
+  else if(ball.body.position.x > 301 && ball.body.position.x < 600){
+    score = score + 100;
+    ball=null;
+    if ( count>= 5) estadoJogo ="end";
+  } else if(ball.body.position.x > 601 && ball.body.position.x < 900){
+    score = score + 200;
+    ball=null;
+    if ( count>= 5) estadoJogo ="end";
   }
- 
-    if(ball!=null)
-    {
-       ball.display();
-
-      if(ball.body.position.y > 760){
-        if(ball.body.position.x < 300){
-          score = score + 500;
-
-          ball = null;
-
-          if(count >= 5 ) gameState = "end";
-        }
-      }
-  
-  
-    }
-
-    if(gameState == "end"){
-      textSize(100);
-      text(" GameOver",150, 250);
-    }
+  }
+}
 
    for (var k = 0; k < divisions.length; k++) 
    {
@@ -106,7 +100,7 @@ if(ball.x > 601 && ball.x < 900){
 
 function mousePressed()
 {
-  if(gameState !== "end"){
+  if(estadoJogo !== "end"){
     count++;
 
     ball=new Ball(mouseX, 10, 10, 10);
